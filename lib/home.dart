@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'activity.dart';
+import 'built.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -54,27 +55,14 @@ class HomePage extends StatelessWidget {
                     style: AppStyles.subtitle,
                   ),
                   SizedBox(height: 32),
-                  
-                  // Bouton centré
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Activity()), // Ouvre ActivityPage
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      child: Text(
-                        "LANCER L'APPLICATION",
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ),
-                  ),
+
+                  // Utilisation de la fonction buildLancementButton depuis built.dart
+                  buildLancementButton("LANCER L'APPLICATION", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Activity()), // Ouvre ActivityPage
+                    );
+                  }),
                 ],
               ),
             ),
