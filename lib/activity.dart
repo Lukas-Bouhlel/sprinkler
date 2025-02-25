@@ -71,7 +71,7 @@ class Activity extends StatelessWidget {
               buildImageButton('assets/img/retour.png', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()), // Ouvre HomePage
+                  MaterialPageRoute(builder: (context) => MyHomePage()), // Ouvre HomePage
                 );
               }),
             ],

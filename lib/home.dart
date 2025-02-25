@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'activity.dart';
 import 'built.dart';
+import 'mqtt.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -12,12 +13,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: HomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _HomePage createState() => _HomePage();
+}
+
+class _HomePage extends State<MyHomePage> {
+  final Mqtt mqtt = Mqtt();
+
+  @override
+  void initState() {
+    super.initState();
+    mqtt.connect();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +55,8 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center, // Centre les éléments horizontalement
+                crossAxisAlignment: CrossAxisAlignment
+                    .center, // Centre les éléments horizontalement
                 children: [
                   Text(
                     'BIENVENUE SUR SPRINKLER',
@@ -58,9 +73,12 @@ class HomePage extends StatelessWidget {
 
                   // Utilisation de la fonction buildLancementButton depuis built.dart
                   buildLancementButton("LANCER L'APPLICATION", () {
+                    mqtt.publishMessage('arrosage/manuel', 'Hello MQTT');
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Activity()), // Ouvre ActivityPage
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Activity()), // Ouvre ActivityPage
                     );
                   }),
                 ],
