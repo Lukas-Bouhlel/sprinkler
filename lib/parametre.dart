@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import '../styles.dart'; // Importation des styles
 import 'activity.dart';
 import 'built.dart';
+import 'main.dart';
 
-class Parametre extends StatelessWidget {
+class MyParametre extends StatefulWidget {
+  @override
+  Parametre createState() => Parametre();
+}
+class Parametre extends State<MyParametre> {
+  bool auto = false;
+  bool matin = false;
+  bool midi = false;
+  bool soir = false;
+
   // Liste des boutons à générer dynamiquement (peut venir d'un fichier ou d'une source de données)
   final List<String> buttonLabels = ['MATIN', 'MIDI', 'SOIR'];
 
@@ -44,11 +54,29 @@ class Parametre extends StatelessWidget {
             SizedBox(height: 20),
 
             // Boutons Matin, Midi, Soir (les uns en dessous des autres)
-              buildLancementButton("MATIN", () {}),
+              buildLancementButton("MATIN", () {
+                if (matin) {
+                  mqtt.publishMessage('arrosage/matin/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/matin/on', 'START');
+                }
+              }),
               SizedBox(height: 10),
-              buildLancementButton("MIDI", () {}),
+              buildLancementButton("MIDI", () {
+                if (midi) {
+                  mqtt.publishMessage('arrosage/midi/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/midi/on', 'START');
+                }
+              }),
               SizedBox(height: 10),
-              buildLancementButton("SOIR", () {}),
+              buildLancementButton("SOIR", () {
+                if (soir) {
+                  mqtt.publishMessage('arrosage/soir/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/soir/on', 'START');
+                }
+              }),
             SizedBox(height: 20),
 
             // Texte et checkbox alignés
@@ -59,9 +87,15 @@ class Parametre extends StatelessWidget {
                 SizedBox(width: 10), // Espacement entre le texte et la checkbox
                 Expanded(
                   child: Checkbox(
-                    value: false, // La valeur de la checkbox
-                    onChanged: (bool? newValue) {
-                      // Action à effectuer lorsque la checkbox est cliquée
+                    value: auto, // La valeur de la checkbox
+                    onChanged: (auto) {
+                      if (auto == false) {
+                        mqtt.publishMessage('arrosage/auto/on', 'START');
+                        auto = true;
+                      } else {
+                        mqtt.publishMessage('arrosage/auto/off', 'STOP');
+                        auto = false;
+                      }
                     },
                   ),
                 ),
@@ -89,7 +123,7 @@ class Parametre extends StatelessWidget {
               buildImageButton('assets/img/retour.png', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Activity()), // Ouvre HomePage
+                  MaterialPageRoute(builder: (context) => MyActivity()), // Ouvre HomePage
                 );
               }),
             ],

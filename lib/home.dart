@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'styles.dart';
 import 'activity.dart';
 import 'built.dart';
-import 'mqtt.dart';
+import 'main.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -24,7 +24,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<MyHomePage> {
-  final Mqtt mqtt = Mqtt();
 
   @override
   void initState() {
@@ -73,12 +72,11 @@ class _HomePage extends State<MyHomePage> {
 
                   // Utilisation de la fonction buildLancementButton depuis built.dart
                   buildLancementButton("LANCER L'APPLICATION", () {
-                    mqtt.publishMessage('arrosage/manuel', 'Hello MQTT');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              Activity()), // Ouvre ActivityPage
+                              MyActivity()), // Ouvre ActivityPage
                     );
                   }),
                 ],

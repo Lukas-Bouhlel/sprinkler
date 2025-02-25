@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../styles.dart'; // Importation des styles
-import 'mqtt.dart';
 
 // Fonction pour générer un bouton de lancement automatique (Matin, Midi, Soir)
 Widget buildLancementButton(String text, VoidCallback onPressed) {

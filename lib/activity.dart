@@ -3,8 +3,18 @@ import '../styles.dart'; // Importation des styles
 import 'parametre.dart';
 import 'home.dart';
 import 'built.dart';
+import 'main.dart';
 
-class Activity extends StatelessWidget {
+class MyActivity extends StatefulWidget {
+  @override
+  Activity createState() => Activity();
+}
+
+class Activity extends State<MyActivity> {
+  bool matin = false;
+  bool midi = false;
+  bool soir = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,12 +33,13 @@ class Activity extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Lancer l'arrosage manuellement :", style: AppStyles.subtitle),
+              Text("Lancer l'arrosage manuellement :",
+                  style: AppStyles.subtitle),
               SizedBox(height: 20),
-              
+
               // Bouton Lancer
               buildLancementButton("LANCER", () {
-                // Action à effectuer lors du clic
+                mqtt.publishMessage('arrosage/manuel', 'GO');
               }),
 
               SizedBox(height: 20),
@@ -36,11 +47,29 @@ class Activity extends StatelessWidget {
               SizedBox(height: 20),
 
               // Boutons Matin, Midi, Soir (les uns en dessous des autres)
-              buildLancementButton("MATIN", () {}),
+              buildLancementButton("MATIN", () {
+                if (matin == false) {
+                  mqtt.publishMessage('arrosage/matin/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/matin/on', 'START');
+                }
+              }),
               SizedBox(height: 10),
-              buildLancementButton("MIDI", () {}),
+              buildLancementButton("MIDI", () {
+                if (midi) {
+                  mqtt.publishMessage('arrosage/midi/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/midi/on', 'START');
+                }
+              }),
               SizedBox(height: 10),
-              buildLancementButton("SOIR", () {}),
+              buildLancementButton("SOIR", () {
+                if (soir) {
+                  mqtt.publishMessage('arrosage/soir/off', 'STOP');
+                } else {
+                  mqtt.publishMessage('arrosage/soir/on', 'START');
+                }
+              }),
 
               SizedBox(height: 20),
               Text("Activité de l'arrosage :", style: AppStyles.subtitle),
@@ -48,7 +77,6 @@ class Activity extends StatelessWidget {
           ),
         ),
       ),
-
       bottomNavigationBar: BottomAppBar(
         color: AppColors.primary, // Fond de la couleur primary
         height: 50,
@@ -61,7 +89,8 @@ class Activity extends StatelessWidget {
               buildImageButton('assets/img/parametres.png', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Parametre()), // Ouvre ParametrePage
+                  MaterialPageRoute(
+                      builder: (context) => MyParametre()), // Ouvre ParametrePage
                 );
               }),
 
@@ -71,7 +100,8 @@ class Activity extends StatelessWidget {
               buildImageButton('assets/img/retour.png', () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()), // Ouvre HomePage
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage()), // Ouvre HomePage
                 );
               }),
             ],
